@@ -18,9 +18,9 @@ public class Nave {
         texture =  new Texture("nave.png");
         x = 100;
         y = 100;
-        w = 180;
-        h = 200;
-        v = 5;
+        w = 120;
+        h = 100;
+        v = 15;
         balas = new ArrayList<>();
     }
 
