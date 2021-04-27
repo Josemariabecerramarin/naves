@@ -22,6 +22,6 @@ public class Bala {
     }
 
     void update(){
-        y += 15;
+        y += 25;
     }
 }

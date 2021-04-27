@@ -21,6 +21,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		fondo = new Fondo();
 		nave = new Nave();
+		Alien alien = new Alien();
 	}
 
 	@Override
