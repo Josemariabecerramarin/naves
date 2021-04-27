@@ -9,34 +9,80 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class MyGdxGame extends ApplicationAdapter {
 
-
+	static Random random = new Random();
 	SpriteBatch batch;
 	Fondo fondo;
 	Nave nave;
+	List<Alien> aliens;
+	List<Bala> balasAEliminar = new ArrayList<>();
+	List<Alien> aliensAEliminar = new ArrayList<>();
+	Temporizador temporizadorNuevoAlien;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		fondo = new Fondo();
 		nave = new Nave();
-		Alien alien = new Alien();
+		aliens = new ArrayList<>();
+
+		aliens.add(new Alien());
+
+		temporizadorNuevoAlien = new Temporizador(120);
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(0, 0, 0, 0);
+		Gdx.gl.glClearColor(0,0,0,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		nave.update();
+		Temporizador.tiempoJuego += 1;
 
+		if(temporizadorNuevoAlien.suena()){
+			aliens.add(new Alien());
+		}
+
+		nave.update();
+		for(Alien alien:aliens) alien.update();
+		boolean heEliminado = false;
+		for(Bala bala:nave.balas){
+			for(Alien alien:aliens){
+				if (!(bala.x > alien.x + alien.w) && !(bala.x + bala.w < alien.x)
+						&&
+						!(bala.y > alien.y + alien.h) && !(bala.y + bala.h < alien.y)) {
+
+					aliensAEliminar.add(alien);
+					balasAEliminar.add(bala);
+					heEliminado = true;
+				}
+			}
+		}
+
+		for(Alien alien: aliensAEliminar){
+			aliens.remove(alien);
+		}
+
+		for(Bala bala: balasAEliminar){
+			nave.balas.remove(bala);
+		}
+
+		if(heEliminado){
+			aliensAEliminar.clear();
+			balasAEliminar.clear();
+		}
 		batch.begin();
 		fondo.render(batch);
 		nave.render(batch);
+		for(Alien alien:aliens) alien.render(batch);
 		batch.end();
 	}
 }
+
 
 /*
 create();
