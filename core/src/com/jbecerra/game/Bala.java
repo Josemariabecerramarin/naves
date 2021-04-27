@@ -5,16 +5,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 public class Bala {
-    Texture texture;
+    static Texture texture = new Texture("bala.png");
 
-    float x, y, w, h;
+    float x, y, w, h, v;
 
     Bala(float xNave, float yNave){
-        texture = new Texture("bala.png");
         w = 40;
         h = 50;
         x = xNave-w/2;
         y = yNave;
+        v = 25;
     }
 
     public void render(SpriteBatch batch) {
@@ -22,6 +22,6 @@ public class Bala {
     }
 
     void update(){
-        y += 25;
+        y += v;
     }
 }
