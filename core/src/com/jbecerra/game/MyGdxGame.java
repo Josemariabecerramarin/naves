@@ -4,8 +4,10 @@ package com.jbecerra.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -17,19 +19,23 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	static Random random = new Random();
 	SpriteBatch batch;
+	BitmapFont bitmapFont;
 	Fondo fondo;
 	Nave nave;
-	List<Alien> aliens;
+	List<Alien> aliens = new ArrayList<>();
 	List<Bala> balasAEliminar = new ArrayList<>();
 	List<Alien> aliensAEliminar = new ArrayList<>();
 	Temporizador temporizadorNuevoAlien;
+	float anchoTexto;
+	float altoTexto;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		bitmapFont = new BitmapFont();
+		bitmapFont.setColor(Color.WHITE);
 		fondo = new Fondo();
 		nave = new Nave();
-		aliens = new ArrayList<>();
 
 		aliens.add(new Alien());
 
@@ -43,45 +49,50 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		Temporizador.tiempoJuego += 1;
 
-		if(temporizadorNuevoAlien.suena()){
-			aliens.add(new Alien());
-		}
+		if (temporizadorNuevoAlien.suena()) aliens.add(new Alien());
 
 		nave.update();
-		for(Alien alien:aliens) alien.update();
-		boolean heEliminado = false;
-		for(Bala bala:nave.balas){
-			for(Alien alien:aliens){
-				if (!(bala.x > alien.x + alien.w) && !(bala.x + bala.w < alien.x)
-						&&
-						!(bala.y > alien.y + alien.h) && !(bala.y + bala.h < alien.y)) {
+		for (Alien alien:aliens) alien.update();
 
-					aliensAEliminar.add(alien);
+
+		balasAEliminar.clear();
+		aliensAEliminar.clear();
+		for (Alien alien: aliens) {
+			for (Bala bala: nave.balas) {
+				if (solapan(bala.x, bala.y, bala.w, bala.h, alien.x, alien.y, alien.w, alien.h)) {
 					balasAEliminar.add(bala);
-					heEliminado = true;
+					aliensAEliminar.add(alien);
+					nave.puntos++;
+					break;
 				}
 			}
-		}
 
-		for(Alien alien: aliensAEliminar){
-			aliens.remove(alien);
+			if (!nave.muerta && solapan(alien.x, alien.y, alien.w, alien.h, nave.x, nave.y, nave.w, nave.h)) {
+				nave.vidas--;
+				nave.muerta = true;
+				nave.respawn.activar();
+			}
 		}
+		for (Bala bala:balasAEliminar) nave.balas.remove(bala);
+		for (Alien alien:aliensAEliminar) aliens.remove(alien);
 
-		for(Bala bala: balasAEliminar){
-			nave.balas.remove(bala);
-		}
 
-		if(heEliminado){
-			aliensAEliminar.clear();
-			balasAEliminar.clear();
-		}
+
 		batch.begin();
 		fondo.render(batch);
 		nave.render(batch);
 		for(Alien alien:aliens) alien.render(batch);
+		bitmapFont.draw(batch, "VIDAS: "+nave.vidas, 1800, 1060);
+		bitmapFont.draw(batch, "PUNTOS: "+nave.puntos, 20, 1060, 100f, 0, true);
 		batch.end();
 	}
+
+	boolean solapan(float x, float y, float w, float h, float x2, float y2, float w2, float h2){
+		return !(x > x2 + w2) && !(x + w < x2) && !(y > y2 + h2) && !(y + h < y2);
+	}
 }
+
+
 
 
 /*
