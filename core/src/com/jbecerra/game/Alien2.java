@@ -2,17 +2,13 @@ package com.jbecerra.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-public class Alien {
+public class Alien2 {
 
-
-
-
-
-        Animacion alien = new Animacion(9f, true, "alienr1.png", "alienr2.png");
+        Animacion alienv = new Animacion(9f, true, "alienv1.png", "alienv2.png");
         float x, y, w, h, vx, vy;
         Temporizador cambioVelocidad;
 
-        Alien() {
+        Alien2() {
             x = MyGdxGame.random.nextInt(1920);
             y = 1000;
             w = 50;
@@ -24,7 +20,7 @@ public class Alien {
 
         void render(SpriteBatch batch) {
 
-            batch.draw(alien.getFrame(Temporizador.tiempoJuego), x, y, w, h);
+            batch.draw(alienv.getFrame(Temporizador.tiempoJuego), x, y, w, h);
         }
 
         public void update() {
@@ -36,5 +32,6 @@ public class Alien {
             }
         }
     }
+
 
 

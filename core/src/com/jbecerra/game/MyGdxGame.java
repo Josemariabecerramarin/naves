@@ -23,9 +23,12 @@ public class MyGdxGame extends ApplicationAdapter {
 	Fondo fondo;
 	Nave nave;
 	List<Alien> aliens = new ArrayList<>();
+	List<Alien2> aliens2 = new ArrayList<>();
 	List<Bala> balasAEliminar = new ArrayList<>();
 	List<Alien> aliensAEliminar = new ArrayList<>();
+	List<Alien2> aliensAEliminar2 = new ArrayList<>();
 	Temporizador temporizadorNuevoAlien;
+	Temporizador temporizadorNuevoAlien2;
 	float anchoTexto;
 	float altoTexto;
 
@@ -37,9 +40,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		fondo = new Fondo();
 		nave = new Nave();
 
-		aliens.add(new Alien());
+
 
 		temporizadorNuevoAlien = new Temporizador(120);
+		temporizadorNuevoAlien2 = new Temporizador(130);
 	}
 
 	@Override
@@ -49,10 +53,13 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		Temporizador.tiempoJuego += 1;
 
+
 		if (temporizadorNuevoAlien.suena()) aliens.add(new Alien());
+		if (temporizadorNuevoAlien2.suena()) aliens2.add(new Alien2());
 
 		nave.update();
 		for (Alien alien:aliens) alien.update();
+		for (Alien2 alien2:aliens2) alien2.update();
 
 
 		balasAEliminar.clear();
@@ -73,8 +80,26 @@ public class MyGdxGame extends ApplicationAdapter {
 				nave.respawn.activar();
 			}
 		}
+		for (Alien2 alien2: aliens2) {
+			for (Bala bala: nave.balas) {
+				if (solapan(bala.x, bala.y, bala.w, bala.h, alien2.x, alien2.y, alien2.w, alien2.h)) {
+					balasAEliminar.add(bala);
+					aliensAEliminar2.add(alien2);
+					nave.puntos++;
+					break;
+				}
+			}
+
+			if (!nave.muerta && solapan(alien2.x, alien2.y, alien2.w, alien2.h, nave.x, nave.y, nave.w, nave.h)) {
+				nave.vidas--;
+				nave.muerta = true;
+				nave.respawn.activar();
+			}
+		}
+
 		for (Bala bala:balasAEliminar) nave.balas.remove(bala);
 		for (Alien alien:aliensAEliminar) aliens.remove(alien);
+		for (Alien2 alien2:aliensAEliminar2) aliens2.remove(alien2);
 
 
 
@@ -82,8 +107,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		fondo.render(batch);
 		nave.render(batch);
 		for(Alien alien:aliens) alien.render(batch);
-		bitmapFont.draw(batch, "VIDAS: "+nave.vidas, 1800, 1060);
-		bitmapFont.draw(batch, "PUNTOS: "+nave.puntos, 20, 1060, 100f, 0, true);
+		for(Alien2 alien2:aliens2) alien2.render(batch);
+		bitmapFont.draw(batch, "VIDAS: "+nave.vidas, 1650, 1020);
+		bitmapFont.draw(batch, "PUNTOS: "+nave.puntos, 60, 1020, 250f, 0, true);
+		bitmapFont.getData().setScale(2f);
+		bitmapFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		batch.end();
 	}
 
@@ -91,6 +119,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		return !(x > x2 + w2) && !(x + w < x2) && !(y > y2 + h2) && !(y + h < y2);
 	}
 }
+
 
 
 
