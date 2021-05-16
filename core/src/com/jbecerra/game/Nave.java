@@ -48,7 +48,8 @@ public class Nave {
         if(Gdx.input.isKeyPressed(Input.Keys.S)) y -= v;
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            balas.add(new Bala(x+w/2, y+h));
+            balas.add(new Bala(x+10, y+60));
+            balas.add(new Bala(x+72, y+60));
         }
         if(x < 0) x = 1920; //para hacer los limites de pantalla
         if(y < 50) y = 50;
