@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Nave {
-    Animacion nave = new Animacion(5f, true, "nave1.png", "nave2.png","nave3.png");
+    Animacion nave = new Animacion(6f, true, "nave1.png", "nave2.png","nave3.png");
     float x, y, w, h, v;
     List<Bala> balas;
     int vidas = 3;
@@ -31,7 +31,11 @@ public class Nave {
     }
 
     void render(SpriteBatch batch){
+        if (muerta) batch.setColor(1, 1, 1, 0.35f);
         batch.draw(nave.getFrame(Temporizador.tiempoJuego), x, y, w, h);
+        if (muerta) batch.setColor(1, 1, 1, 1);
+
+
 
         for (Bala bala: balas) {
             bala.render(batch);
@@ -48,7 +52,8 @@ public class Nave {
         if(Gdx.input.isKeyPressed(Input.Keys.S)) y -= v;
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            balas.add(new Bala(x+w/2, y+h));
+            balas.add(new Bala(x+10, y+60));
+            balas.add(new Bala(x+72, y+60));
         }
         if(x < 0) x = 1920; //para hacer los limites de pantalla
         if(y < 50) y = 50;
@@ -58,6 +63,11 @@ public class Nave {
         if(respawn.suena()){
             muerta = false;
         }
+    }
+    public void morir() {
+        vidas--;
+        muerta = true;
+        respawn.activar();
     }
 
 }

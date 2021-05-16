@@ -1,11 +1,15 @@
 package com.jbecerra.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 public class Bala {
     static Texture texture = new Texture("bala.png");
+    Sound sound;
 
     float x, y, w, h, v;
 
@@ -15,6 +19,8 @@ public class Bala {
         x = xNave-w/2;
         y = yNave;
         v = 25;
+        sound = Gdx.audio.newSound(Gdx.files.internal("disparo.ogg"));
+        sound.play();
     }
 
     public void render(SpriteBatch batch) {

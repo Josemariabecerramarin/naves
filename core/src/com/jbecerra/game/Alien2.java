@@ -14,7 +14,7 @@ public class Alien2 {
             w = 50;
             h = 40;
             vx = 1;
-            vy = 0.7f;
+            vy = 1.7f;
             cambioVelocidad = new Temporizador(30);
         }
 
