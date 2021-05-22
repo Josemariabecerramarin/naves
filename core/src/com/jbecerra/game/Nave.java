@@ -12,7 +12,7 @@ public class Nave {
     Animacion nave = new Animacion(6f, true, "nave1.png", "nave2.png","nave3.png");
     float x, y, w, h, v;
     List<Bala> balas;
-    int vidas = 3;
+    int vidas = 2;
     int puntos = 0;
     boolean muerta = false;
 

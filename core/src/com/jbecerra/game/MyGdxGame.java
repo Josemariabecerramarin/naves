@@ -34,32 +34,37 @@ public class MyGdxGame extends ApplicationAdapter {
 	List<Explosion> explosiones = new ArrayList<>();
 	List<Explosion> explosionesAEliminar = new ArrayList<>();
 	boolean pausa = false;
+	Texture pause;
 
 	@Override
-	public void create () {
+	public void create() {
 		batch = new SpriteBatch();
 		bitmapFont = new BitmapFont();
 		bitmapFont.setColor(Color.WHITE);
 		bitmapFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		bitmapFont.getData().setScale(2f);
+		pause = new Texture("pause.png");
+		inicializarJuego();
+	}
+	void inicializarJuego() {
 		fondo = new Fondo();
 		nave = new Nave();
+		temporizadorNuevoAlien = new Temporizador(120);
+		temporizadorNuevoAlien2 = new Temporizador(150);
 		scoreboard = new Scoreboard();
 		gameover = false;
 
-
-		temporizadorNuevoAlien = new Temporizador(120);
-		temporizadorNuevoAlien2 = new Temporizador(150);
 	}
 
 	@Override
-	public void render () {
-		Gdx.gl.glClearColor(0,0,0,0);
+	public void render() {
+		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			pausa = !pausa;
 		}
-		if(!pausa) {
+
+		if (!pausa) {
 
 			Temporizador.tiempoJuego += 1;
 
@@ -74,23 +79,33 @@ public class MyGdxGame extends ApplicationAdapter {
 				for (Alien2 alien2 : aliens2) alien2.update();
 
 			} else {
-				scoreboard.update(nave.puntos);
+
+				int result = scoreboard.update(nave.puntos);
+				if (result == 1) {
+					inicializarJuego();
+				} else if (result == 2) {
+					Gdx.app.exit();
+				}
+
+
 			}
+
 
 			balasAEliminar.clear();
 			aliensAEliminar.clear();
 			for (Alien alien : aliens) {
 				for (Bala bala : nave.balas) {
-					if (solapan(bala.x, bala.y, bala.w, bala.h, alien.x, alien.y, alien.w, alien.h)) {
+					if (Utils.solapan(bala.x, bala.y, bala.w, bala.h, alien.x, alien.y, alien.w, alien.h)) {
 						balasAEliminar.add(bala);
 						aliensAEliminar.add(alien);
 						explosiones.add(new Explosion(alien.x, alien.y, alien.w, alien.h));
+						alien.sound.play();
 						nave.puntos += 3;
 						break;
 					}
 				}
 
-				if (!gameover && !nave.muerta && solapan(alien.x, alien.y, alien.w, alien.h, nave.x, nave.y, nave.w, nave.h)) {
+				if (!gameover && !nave.muerta && Utils.solapan(alien.x, alien.y, alien.w, alien.h, nave.x, nave.y, nave.w, nave.h)) {
 					nave.vidas--;
 					nave.muerta = true;
 					nave.respawn.activar();
@@ -101,16 +116,17 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 			for (Alien2 alien2 : aliens2) {
 				for (Bala bala : nave.balas) {
-					if (solapan(bala.x, bala.y, bala.w, bala.h, alien2.x, alien2.y, alien2.w, alien2.h)) {
+					if (Utils.solapan(bala.x, bala.y, bala.w, bala.h, alien2.x, alien2.y, alien2.w, alien2.h)) {
 						balasAEliminar.add(bala);
 						aliensAEliminar2.add(alien2);
 						explosiones.add(new Explosion(alien2.x, alien2.y, alien2.w, alien2.h));
+						alien2.sound.play();
 						nave.puntos += 5;
 						break;
 					}
 				}
 
-				if (!nave.muerta && solapan(alien2.x, alien2.y, alien2.w, alien2.h, nave.x, nave.y, nave.w, nave.h)) {
+				if (!nave.muerta && Utils.solapan(alien2.x, alien2.y, alien2.w, alien2.h, nave.x, nave.y, nave.w, nave.h)) {
 					nave.vidas--;
 					nave.muerta = true;
 					nave.respawn.activar();
@@ -148,11 +164,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 
 			batch.end();
-		}
-	}
 
-	boolean solapan(float x, float y, float w, float h, float x2, float y2, float w2, float h2){
-		return !(x > x2 + w2) && !(x + w < x2) && !(y > y2 + h2) && !(y + h < y2);
+		}
 	}
 }
 
