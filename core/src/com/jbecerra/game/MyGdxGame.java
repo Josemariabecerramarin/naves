@@ -31,6 +31,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	Temporizador temporizadorNuevoAlien2;
 	Scoreboard scoreboard;
 	boolean gameover;
+	List<Explosion> explosiones = new ArrayList<>();
+	List<Explosion> explosionesAEliminar = new ArrayList<>();
+	boolean pausa = false;
 
 	@Override
 	public void create () {
@@ -53,83 +56,99 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		Gdx.gl.glClearColor(0,0,0,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		Temporizador.tiempoJuego += 1;
-
-
-		if (temporizadorNuevoAlien.suena()) aliens.add(new Alien());
-		if (temporizadorNuevoAlien2.suena()) aliens2.add(new Alien2());
-
-		if(!gameover){
-		nave.update();
-
-		for (Alien alien:aliens) alien.update();
-		for (Alien2 alien2:aliens2) alien2.update();
-
-		}else{
-			scoreboard.update(nave.puntos);
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+			pausa = !pausa;
 		}
+		if(!pausa) {
 
-		balasAEliminar.clear();
-		aliensAEliminar.clear();
-		for (Alien alien: aliens) {
-			for (Bala bala: nave.balas) {
-				if (solapan(bala.x, bala.y, bala.w, bala.h, alien.x, alien.y, alien.w, alien.h)) {
-					balasAEliminar.add(bala);
-					aliensAEliminar.add(alien);
-					nave.puntos+=3;
-					break;
+			Temporizador.tiempoJuego += 1;
+
+
+			if (temporizadorNuevoAlien.suena()) aliens.add(new Alien());
+			if (temporizadorNuevoAlien2.suena()) aliens2.add(new Alien2());
+
+			if (!gameover) {
+				nave.update();
+
+				for (Alien alien : aliens) alien.update();
+				for (Alien2 alien2 : aliens2) alien2.update();
+
+			} else {
+				scoreboard.update(nave.puntos);
+			}
+
+			balasAEliminar.clear();
+			aliensAEliminar.clear();
+			for (Alien alien : aliens) {
+				for (Bala bala : nave.balas) {
+					if (solapan(bala.x, bala.y, bala.w, bala.h, alien.x, alien.y, alien.w, alien.h)) {
+						balasAEliminar.add(bala);
+						aliensAEliminar.add(alien);
+						explosiones.add(new Explosion(alien.x, alien.y, alien.w, alien.h));
+						nave.puntos += 3;
+						break;
+					}
+				}
+
+				if (!gameover && !nave.muerta && solapan(alien.x, alien.y, alien.w, alien.h, nave.x, nave.y, nave.w, nave.h)) {
+					nave.vidas--;
+					nave.muerta = true;
+					nave.respawn.activar();
+					if (nave.vidas == 0) {
+						gameover = true;
+					}
+				}
+			}
+			for (Alien2 alien2 : aliens2) {
+				for (Bala bala : nave.balas) {
+					if (solapan(bala.x, bala.y, bala.w, bala.h, alien2.x, alien2.y, alien2.w, alien2.h)) {
+						balasAEliminar.add(bala);
+						aliensAEliminar2.add(alien2);
+						explosiones.add(new Explosion(alien2.x, alien2.y, alien2.w, alien2.h));
+						nave.puntos += 5;
+						break;
+					}
+				}
+
+				if (!nave.muerta && solapan(alien2.x, alien2.y, alien2.w, alien2.h, nave.x, nave.y, nave.w, nave.h)) {
+					nave.vidas--;
+					nave.muerta = true;
+					nave.respawn.activar();
+					if (nave.vidas == 0) {
+						gameover = true;
+					}
+				}
+			}
+			for (Explosion explosion : explosiones) {
+				if (explosion.texplosion.suena()) {
+					explosionesAEliminar.add(explosion);
 				}
 			}
 
-			if (!gameover && !nave.muerta && solapan(alien.x, alien.y, alien.w, alien.h, nave.x, nave.y, nave.w, nave.h)) {
-				nave.vidas--;
-				nave.muerta = true;
-				nave.respawn.activar();
-				if (nave.vidas == 0){
-					gameover = true;
-				}
+			for (Explosion explosion : explosionesAEliminar) explosiones.remove(explosion);
+			for (Bala bala : balasAEliminar) nave.balas.remove(bala);
+			for (Alien alien : aliensAEliminar) aliens.remove(alien);
+			for (Alien2 alien2 : aliensAEliminar2) aliens2.remove(alien2);
+
+
+			batch.begin();
+			fondo.render(batch);
+			nave.render(batch);
+			for (Explosion explosion : explosiones) {
+				explosion.render(batch);
 			}
-		}
-		for (Alien2 alien2: aliens2) {
-			for (Bala bala: nave.balas) {
-				if (solapan(bala.x, bala.y, bala.w, bala.h, alien2.x, alien2.y, alien2.w, alien2.h)) {
-					balasAEliminar.add(bala);
-					aliensAEliminar2.add(alien2);
-					nave.puntos+=5;
-					break;
-				}
+			for (Alien alien : aliens) alien.render(batch);
+			for (Alien2 alien2 : aliens2) alien2.render(batch);
+			bitmapFont.draw(batch, "VIDAS: " + nave.vidas, 1650, 1020);
+			bitmapFont.draw(batch, "PUNTOS: " + nave.puntos, 60, 1020, 250f, 0, true);
+
+			if (gameover) {
+				scoreboard.render(batch, bitmapFont);
 			}
 
-			if (!nave.muerta && solapan(alien2.x, alien2.y, alien2.w, alien2.h, nave.x, nave.y, nave.w, nave.h)) {
-				nave.vidas--;
-				nave.muerta = true;
-				nave.respawn.activar();
-				if (nave.vidas == 0){
-					gameover = true;
-				}
-			}
+
+			batch.end();
 		}
-
-		for (Bala bala:balasAEliminar) nave.balas.remove(bala);
-		for (Alien alien:aliensAEliminar) aliens.remove(alien);
-		for (Alien2 alien2:aliensAEliminar2) aliens2.remove(alien2);
-
-
-		batch.begin();
-		fondo.render(batch);
-		nave.render(batch);
-		for(Alien alien:aliens) alien.render(batch);
-		for(Alien2 alien2:aliens2) alien2.render(batch);
-		bitmapFont.draw(batch, "VIDAS: "+nave.vidas, 1650, 1020);
-		bitmapFont.draw(batch, "PUNTOS: "+nave.puntos, 60, 1020, 250f, 0, true);
-
-		if (gameover) {
-			scoreboard.render(batch, bitmapFont);
-		}
-
-
-		batch.end();
 	}
 
 	boolean solapan(float x, float y, float w, float h, float x2, float y2, float w2, float h2){

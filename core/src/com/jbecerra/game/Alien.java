@@ -9,8 +9,10 @@ public class Alien {
 
 
         Animacion alien = new Animacion(9f, true, "alienr1.png", "alienr2.png");
+
         float x, y, w, h, vx, vy;
         Temporizador cambioVelocidad;
+
 
         Alien() {
             x = MyGdxGame.random.nextInt(1920);
@@ -24,8 +26,14 @@ public class Alien {
 
         void render(SpriteBatch batch) {
 
-            batch.draw(alien.getFrame(Temporizador.tiempoJuego), x, y, w, h);
-        }
+
+
+
+                batch.draw(alien.getFrame(Temporizador.tiempoJuego), x, y, w, h);
+            }
+
+
+
 
         public void update() {
             y -= vy;
