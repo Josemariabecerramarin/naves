@@ -20,7 +20,7 @@ public class Scoreboard {
         int aborrar;
 
 
-        class Score {
+        static class Score {
             String nombre;
             int puntuacion;
 
