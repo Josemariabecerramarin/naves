@@ -13,7 +13,7 @@ public class Nave {
     Animacion nave = new Animacion(6f, true, "nave1.png", "nave2.png","nave3.png");
     float x, y, w, h, v;
     List<Bala> balas;
-    int vidas = 1;
+    int vidas = 3;
     int puntos = 0;
     boolean muerta = false;
     Texture vida1= new Texture("vida1.png");
