@@ -2,6 +2,7 @@ package com.jbecerra.game;
 
 public class Temporizador {
     static int tiempoJuego;
+    static int tiempomenu;
     int alarma;
     int frecuencia;
     boolean repetir = true;

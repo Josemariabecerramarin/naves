@@ -7,7 +7,7 @@ public class Animacion {
     boolean repetir;
     Texture[] textures;
 
-    Animacion(float duracionFrame, boolean repetir, String... ficherosTexturas) {
+    Animacion (float duracionFrame, boolean repetir, String... ficherosTexturas) {
         this.duracionFrame = duracionFrame;
         this.repetir = repetir;
         this.textures = new Texture[ficherosTexturas.length];

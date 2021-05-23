@@ -1,6 +1,7 @@
 package com.jbecerra.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,6 +18,7 @@ public class Scoreboard {
         float x = 650;
         float y = 250;
         int aborrar;
+
 
         class Score {
             String nombre;
@@ -85,6 +87,7 @@ public class Scoreboard {
 
         void render(SpriteBatch batch, BitmapFont font) {
             batch.draw(background, x + 50, y + 350, 520, 320);
+
 
             if (!saved) {
                 font.draw(batch, "ENTER YOUR NAME", x + 140, y + 300);

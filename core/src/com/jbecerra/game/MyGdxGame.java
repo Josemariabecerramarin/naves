@@ -4,6 +4,7 @@ package com.jbecerra.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -33,8 +34,15 @@ public class MyGdxGame extends ApplicationAdapter {
 	boolean gameover;
 	List<Explosion> explosiones = new ArrayList<>();
 	List<Explosion> explosionesAEliminar = new ArrayList<>();
-	boolean pausa = false;
+	boolean pausa = true;
 	Texture pause;
+	Animacion AnimacionMenu;
+    boolean Menu = true;
+
+	Sound musica_menu;
+	Sound musica_juego;
+	Sound musica_score;
+
 
 	@Override
 	public void create() {
@@ -43,8 +51,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		bitmapFont.setColor(Color.WHITE);
 		bitmapFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		bitmapFont.getData().setScale(2f);
+		AnimacionMenu = new Animacion(15f, true, "menu1.png", "menu2.png","menu3.png");
+		musica_menu = Gdx.audio.newSound(Gdx.files.internal("Intro.mp3"));
+		musica_menu.setLooping(musica_menu.play(0.1f),true);
 		pause = new Texture("pause.png");
 		inicializarJuego();
+
+
+
 	}
 	void inicializarJuego() {
 		fondo = new Fondo();
@@ -54,15 +68,31 @@ public class MyGdxGame extends ApplicationAdapter {
 		scoreboard = new Scoreboard();
 		gameover = false;
 
+
 	}
 
 	@Override
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		if (Menu && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+			Menu = false;
+			pausa = false;
+			musica_menu.stop();
+			musica_juego = Gdx.audio.newSound(Gdx.files.internal("Juego.mp3"));
+			musica_juego.setLooping(musica_juego.play(0.1f),true);
+
+
+		}
+
+
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			pausa = !pausa;
 		}
+
+		Temporizador.tiempomenu += 1;
+
 
 		if (!pausa) {
 
@@ -132,6 +162,7 @@ public class MyGdxGame extends ApplicationAdapter {
 					nave.respawn.activar();
 					if (nave.vidas == 0) {
 						gameover = true;
+
 					}
 				}
 			}
@@ -159,7 +190,12 @@ public class MyGdxGame extends ApplicationAdapter {
 			bitmapFont.draw(batch, "PUNTOS: " + nave.puntos, 60, 1020, 250f, 0, true);
 
 			if (gameover) {
+				//musica_juego.stop();
+
 				scoreboard.render(batch, bitmapFont);
+				//musica_score = Gdx.audio.newSound(Gdx.files.internal("final.mp3"));
+				//musica_score.setLooping(musica_score.play(0.1f),true);
+
 			}
 
 
@@ -170,7 +206,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		    batch.draw(pause, 450, 460, 950, 200);
 		    batch.end();
         }
+		if (Menu){
+			batch.begin();
+			batch.draw(AnimacionMenu.getFrame(Temporizador.tiempomenu), 0, 0, 1920, 1080);
 
+			batch.end();
+
+		}
 
 	}
 }

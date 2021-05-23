@@ -17,6 +17,7 @@ public class Alien {
         Sound sound = Gdx.audio.newSound(Gdx.files.internal("s.mp3"));
 
 
+
         Alien() {
             x = MyGdxGame.random.nextInt(1920);
             y = 1000;
