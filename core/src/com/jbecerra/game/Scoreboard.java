@@ -24,11 +24,14 @@ public class Scoreboard {
             String nombre;
             int puntuacion;
 
+
+
             public Score(String nombre, int puntuacion) {
                 this.nombre = nombre;
                 this.puntuacion = puntuacion;
             }
         }
+
 
         Texture background = new Texture("gameover.png");
         char[] nombre = {'A', 'A', 'A'};  // 65:A -> 90:Z
@@ -86,8 +89,8 @@ public class Scoreboard {
         }
 
         void render(SpriteBatch batch, BitmapFont font) {
-            batch.draw(background, x + 50, y + 350, 520, 320);
 
+            batch.draw(background, x + 50, y + 350, 520, 320);
 
             if (!saved) {
                 font.draw(batch, "ENTER YOUR NAME", x + 140, y + 300);

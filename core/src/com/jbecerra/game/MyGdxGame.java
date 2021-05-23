@@ -41,7 +41,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	Sound musica_menu;
 	Sound musica_juego;
-	Sound musica_score;
+
+
 
 
 	@Override
@@ -55,7 +56,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		musica_menu = Gdx.audio.newSound(Gdx.files.internal("Intro.mp3"));
 		musica_menu.setLooping(musica_menu.play(0.1f),true);
 		pause = new Texture("pause.png");
+
 		inicializarJuego();
+
 
 
 
@@ -67,7 +70,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		temporizadorNuevoAlien2 = new Temporizador(150);
 		scoreboard = new Scoreboard();
 		gameover = false;
-
 
 	}
 
@@ -81,7 +83,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			pausa = false;
 			musica_menu.stop();
 			musica_juego = Gdx.audio.newSound(Gdx.files.internal("Juego.mp3"));
-			musica_juego.setLooping(musica_juego.play(0.1f),true);
+			musica_juego.setLooping(musica_juego.play(0.1f), true);
 
 
 		}
@@ -190,11 +192,10 @@ public class MyGdxGame extends ApplicationAdapter {
 			bitmapFont.draw(batch, "PUNTOS: " + nave.puntos, 60, 1020, 250f, 0, true);
 
 			if (gameover) {
-				//musica_juego.stop();
 
 				scoreboard.render(batch, bitmapFont);
-				//musica_score = Gdx.audio.newSound(Gdx.files.internal("final.mp3"));
-				//musica_score.setLooping(musica_score.play(0.1f),true);
+
+
 
 			}
 
