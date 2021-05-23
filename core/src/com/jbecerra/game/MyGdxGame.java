@@ -70,6 +70,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		temporizadorNuevoAlien2 = new Temporizador(150);
 		scoreboard = new Scoreboard();
 		gameover = false;
+		aliens.clear();
+		aliens2.clear();
 
 	}
 
