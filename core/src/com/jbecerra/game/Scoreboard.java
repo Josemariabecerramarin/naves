@@ -84,10 +84,10 @@ public class Scoreboard {
         }
 
         void render(SpriteBatch batch, BitmapFont font) {
-            batch.draw(background, x + 60, y + 120, 520, 320);
+            batch.draw(background, x + 50, y + 350, 520, 320);
 
             if (!saved) {
-                font.draw(batch, "ENTER YOUR NAME", x + 180, y + 400);
+                font.draw(batch, "ENTER YOUR NAME", x + 140, y + 300);
 
                 font.getData().setScale(3);
                 font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -95,12 +95,12 @@ public class Scoreboard {
                     if (index == i) {
                         font.setColor(Color.RED);
                     }
-                    font.draw(batch, "" + nombre[i], x + 260 + 40 * i, y + 280);
+                    font.draw(batch, "" + nombre[i], x + 220 + 40 * i, y + 240);
                     font.setColor(Color.WHITE);
                 }
                 font.getData().setScale(2);
             } else {
-                font.draw(batch, "SCOREBOARD", x + 220, y + 400);
+                font.draw(batch, "SCOREBOARD", x + 180, y + 300);
 
                 scoreCopia = scoreList;
                 for (int j = 0; j < scoreList.size(); j++) {
@@ -117,16 +117,16 @@ public class Scoreboard {
                 }
 
                 for (int i = 0; i < scoreOrdenado.size() && i < 5; i++) {
-                    font.draw(batch, scoreOrdenado.get(i).nombre, x + 200, y + 340 - i * 40);
-                    font.draw(batch, "" + scoreOrdenado.get(i).puntuacion, x + 380, y + 340 - i * 40);
+                    font.draw(batch, scoreOrdenado.get(i).nombre, x + 200, y + 240 - i * 40);
+                    font.draw(batch, "" + scoreOrdenado.get(i).puntuacion, x + 330, y + 240 - i * 40);
                 }
 
                 if (index == 3) font.setColor(Color.RED);
-                font.draw(batch, "REPLAY", x + 180, y + 60);
+                font.draw(batch, "REPLAY",  110,  130);
                 font.setColor(Color.WHITE);
 
                 if (index == 4) font.setColor(Color.RED);
-                font.draw(batch, "EXIT", x + 360, y + 60);
+                font.draw(batch, "EXIT",  1740, 130);
                 font.setColor(Color.WHITE);
             }
         }

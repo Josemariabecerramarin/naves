@@ -3,6 +3,7 @@ package com.jbecerra.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
@@ -12,9 +13,13 @@ public class Nave {
     Animacion nave = new Animacion(6f, true, "nave1.png", "nave2.png","nave3.png");
     float x, y, w, h, v;
     List<Bala> balas;
-    int vidas = 2;
+    int vidas = 1;
     int puntos = 0;
     boolean muerta = false;
+    Texture vida1= new Texture("vida1.png");
+    Texture vida2= new Texture("vida2.png");
+    Texture vida3= new Texture("vida3.png");
+
 
     Temporizador fireRate;
     Temporizador respawn;
@@ -39,6 +44,15 @@ public class Nave {
 
         for (Bala bala: balas) {
             bala.render(batch);
+        }
+        if (vidas == 3){
+            batch.draw(vida1, 1650, 965, 205, 75);
+        }
+        if (vidas == 2){
+            batch.draw(vida2, 1650,965, 205, 75);
+        }
+        if (vidas == 1){
+            batch.draw(vida3, 1650, 965, 205, 75);
         }
     }
     void update(){

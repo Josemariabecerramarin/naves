@@ -155,7 +155,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 			for (Alien alien : aliens) alien.render(batch);
 			for (Alien2 alien2 : aliens2) alien2.render(batch);
-			bitmapFont.draw(batch, "VIDAS: " + nave.vidas, 1650, 1020);
+			bitmapFont.draw(batch, "VIDAS: " , 1550, 1020);
 			bitmapFont.draw(batch, "PUNTOS: " + nave.puntos, 60, 1020, 250f, 0, true);
 
 			if (gameover) {
@@ -165,7 +165,13 @@ public class MyGdxGame extends ApplicationAdapter {
 
 			batch.end();
 
-		}
+		}else {
+		    batch.begin();
+		    batch.draw(pause, 450, 460, 950, 200);
+		    batch.end();
+        }
+
+
 	}
 }
 
